@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seven Neon Bar Charts - Editable & Moving Labels</title>
+    <title>Seven Neon Bar Charts - Editable & Responsive</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -15,25 +15,72 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding-top: 80px; /* Increased padding to push content further down */
-            margin-bottom: 30px;
+            padding-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .controls-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: center; /* Center the controls */
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 5px; /* Add spacing between input groups */
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .input-group input {
+            width: 50px;
+            padding: 5px;
+            border: 1px solid #333;
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #444;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #666;
         }
 
         .charts-container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-around;
+            justify-content: center; /* Center charts on smaller screens */
             align-items: flex-end;
-            width: 90%;
-            margin-top: 30px; /* Add margin to separate from controls */
-            margin-bottom: 30px;
+            width: 95%;
+            margin-top: 20px;
         }
 
         .chart-container {
-            width: 150px;
-            margin-bottom: 70px;
+            width: 120px;
+            margin: 10px; /* Spacing between charts */
+            margin-bottom: 50px;
             position: relative;
-            height: 400px;
+            height: 300px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -47,56 +94,36 @@
 
         .percentage-label {
             position: absolute;
-            top: -30px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             color: inherit;
             text-shadow: 0px 0px 2px currentColor;
             z-index: 10;
         }
 
-        .controls-container {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
+        /* Media query for mobile devices (adjust as needed) */
+        @media (max-width: 600px) {
+            .charts-container {
+                flex-direction: column; /* Stack charts vertically */
+                align-items: center; /* Center charts horizontally */
+            }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+            .chart-container {
+                width: 80%; /* Wider charts on mobile */
+                margin-bottom: 60px;
+            }
 
-        .input-group label {
-            margin-bottom: 5px;
-            font-size: 12px;
-        }
+            .controls-container {
+                flex-direction: column; /* Stack controls vertically */
+                align-items: center; /* Center controls */
+            }
 
-        .input-group input {
-            width: 60px;
-            padding: 8px;
-            border: 1px solid #333;
-            background-color: #111;
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #444;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #666;
+            .input-group {
+                width: 80%; /* Wider input groups on mobile */
+            }
         }
     </style>
 </head>
@@ -239,7 +266,7 @@
                                     if (labelElement) {
                                         labelElement.textContent = percentage + '%';
                                         const barRect = bar.getProps(['y']);
-                                        const labelY = barRect.y - 20; // Adjust offset as needed
+                                        const labelY = barRect.y - 15;
                                         labelElement.style.top = `${labelY}px`;
                                     }
                                 });
@@ -293,18 +320,18 @@
             ].map(Number); // Ensure values are numbers
 
             const chartData = [
-                { id: 'barChart1', labelId: 'label1', color: 'rgba(255, 0, 255)' },   // Neon Pink
-                { id: 'barChart2', labelId: 'label2', color: 'rgba(0, 255, 255)' },   // Neon Cyan
-                { id: 'barChart3', labelId: 'label3', color: 'rgba(255, 255, 0)' },   // Neon Yellow
-                { id: 'barChart4', labelId: 'label4', color: 'rgba(0, 255, 0)' },     // Neon Green
-                { id: 'barChart5', labelId: 'label5', color: 'rgba(255, 165, 0)' },   // Neon Orange
-                { id: 'barChart6', labelId: 'label6', color: 'rgba(173, 216, 230)' }, // Light Blue
-                { id: 'barChart7', labelId: 'label7', color: 'rgba(138, 43, 226)' }    // Neon Violet
+                { id: 'barChart1', labelId: 'label1', color: 'rgba(255, 0, 255)' },
+                { id: 'barChart2', labelId: 'label2', color: 'rgba(0, 255, 255)' },
+                { id: 'barChart3', labelId: 'label3', color: 'rgba(255, 255, 0)' },
+                { id: 'barChart4', labelId: 'label4', color: 'rgba(0, 255, 0)' },
+                { id: 'barChart5', labelId: 'label5', color: 'rgba(255, 165, 0)' },
+                { id: 'barChart6', labelId: 'label6', color: 'rgba(173, 216, 230)' },
+                { id: 'barChart7', labelId: 'label7', color: 'rgba(138, 43, 226)' }
             ];
 
             // Destroy existing charts if any
             Object.values(charts).forEach(chart => chart.destroy());
-            Object.keys(charts).forEach(key => delete charts[key]); // Clear the charts object
+            Object.keys(charts).forEach(key => delete charts[key]);
 
             // Create and update all charts
             chartData.forEach((data, index) => {
