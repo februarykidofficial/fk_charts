@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seven Neon Bar Charts - Editable & Moving Labels</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 80px; /* Increased padding to push content further down */
+            margin-bottom: 30px;
+        }
+
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: flex-end;
+            width: 90%;
+            margin-top: 30px; /* Add margin to separate from controls */
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            width: 150px;
+            margin-bottom: 70px;
+            position: relative;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        canvas {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0px 0px 3px currentColor);
+        }
+
+        .percentage-label {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: bold;
+            color: inherit;
+            text-shadow: 0px 0px 2px currentColor;
+            z-index: 10;
+        }
+
+        .controls-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-group label {
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+
+        .input-group input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #333;
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #444;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="controls-container">
+        <div class="input-group">
+            <label for="percentage1">Bar 1 (%)</label>
+            <input type="number" id="percentage1" value="70" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <label for="percentage2">Bar 2 (%)</label>
+            <input type="number" id="percentage2" value="45" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <label for="percentage3">Bar 3 (%)</label>
+            <input type="number" id="percentage3" value="85" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <label for="percentage4">Bar 4 (%)</label>
+            <input type="number" id="percentage4" value="60" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <label for="percentage5">Bar 5 (%)</label>
+            <input type="number" id="percentage5" value="30" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <label for="percentage6">Bar 6 (%)</label>
+            <input type="number" id="percentage6" value="95" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <label for="percentage7">Bar 7 (%)</label>
+            <input type="number" id="percentage7" value="55" min="0" max="100">
+        </div>
+        <button onclick="generateCharts()">Generate</button>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-container">
+            <div class="percentage-label" id="label1">70%</div>
+            <canvas id="barChart1"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="percentage-label" id="label2">45%</div>
+            <canvas id="barChart2"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="percentage-label" id="label3">85%</div>
+            <canvas id="barChart3"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="percentage-label" id="label4">60%</div>
+            <canvas id="barChart4"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="percentage-label" id="label5">30%</div>
+            <canvas id="barChart5"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="percentage-label" id="label6">95%</div>
+            <canvas id="barChart6"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <div class="percentage-label" id="label7">55%</div>
+            <canvas id="barChart7"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const charts = {}; // Store chart instances globally
+
+        function createNeonBarChart(canvasId, initialPercentage, barColor) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Value'],
+                    datasets: [{
+                        label: 'Percentage',
+                        data: [initialPercentage],
+                        backgroundColor: barColor + '80',
+                        borderColor: barColor,
+                        borderWidth: 2,
+                        borderSkipped: false,
+                        borderRadius: 5,
+                        hoverBackgroundColor: barColor + 'A0',
+                        hoverBorderColor: barColor,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                display: false
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart',
+                        onProgress: function(animation) {
+                            const chartInstance = animation.chart;
+                            if (chartInstance.config.type === 'bar') {
+                                const meta = chartInstance.getDatasetMeta(0);
+                                meta.data.forEach((bar, index) => {
+                                    const dataValue = meta.data[index].y;
+                                    const percentage = Math.round((1 - dataValue / chartInstance.scales.y.end) * 100);
+                                    const labelId = bar.options.labelId;
+                                    const labelElement = document.getElementById(labelId);
+                                    if (labelElement) {
+                                        labelElement.textContent = percentage + '%';
+                                        const barRect = bar.getProps(['y']);
+                                        const labelY = barRect.y - 20; // Adjust offset as needed
+                                        labelElement.style.top = `${labelY}px`;
+                                    }
+                                });
+                            }
+                        },
+                        onComplete: function(animation) {
+                            const chartInstance = animation.chart;
+                            if (chartInstance.config.type === 'bar') {
+                                const meta = chartInstance.getDatasetMeta(0);
+                                meta.data.forEach((bar, index) => {
+                                    const dataValue = meta.data[index].y;
+                                    const percentage = Math.round((1 - dataValue / chartInstance.scales.y.end) * 100);
+                                    const labelId = bar.options.labelId;
+                                    const labelElement = document.getElementById(labelId);
+                                    if (labelElement) {
+                                        labelElement.textContent = percentage + '%';
+                                        // Reset final position if needed (already close due to onProgress)
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+            return chart;
+        }
+
+        function updateChart(chart, newPercentage, labelId, barColor) {
+            chart.data.datasets[0].data = [newPercentage];
+            chart.data.datasets[0].backgroundColor = barColor + '80';
+            chart.data.datasets[0].borderColor = barColor;
+            // Store labelId in the bar's options for the animation callback
+            chart.getDatasetMeta(0).data[0].options.labelId = labelId;
+            chart.update();
+            const labelElement = document.getElementById(labelId);
+            if (labelElement) {
+                labelElement.style.color = barColor;
+                labelElement.style.textShadow = '0px 0px 2px ' + barColor;
+            }
+        }
+
+        function generateCharts() {
+            const percentages = [
+                document.getElementById('percentage1').value,
+                document.getElementById('percentage2').value,
+                document.getElementById('percentage3').value,
+                document.getElementById('percentage4').value,
+                document.getElementById('percentage5').value,
+                document.getElementById('percentage6').value,
+                document.getElementById('percentage7').value
+            ].map(Number); // Ensure values are numbers
+
+            const chartData = [
+                { id: 'barChart1', labelId: 'label1', color: 'rgba(255, 0, 255)' },   // Neon Pink
+                { id: 'barChart2', labelId: 'label2', color: 'rgba(0, 255, 255)' },   // Neon Cyan
+                { id: 'barChart3', labelId: 'label3', color: 'rgba(255, 255, 0)' },   // Neon Yellow
+                { id: 'barChart4', labelId: 'label4', color: 'rgba(0, 255, 0)' },     // Neon Green
+                { id: 'barChart5', labelId: 'label5', color: 'rgba(255, 165, 0)' },   // Neon Orange
+                { id: 'barChart6', labelId: 'label6', color: 'rgba(173, 216, 230)' }, // Light Blue
+                { id: 'barChart7', labelId: 'label7', color: 'rgba(138, 43, 226)' }    // Neon Violet
+            ];
+
+            // Destroy existing charts if any
+            Object.values(charts).forEach(chart => chart.destroy());
+            Object.keys(charts).forEach(key => delete charts[key]); // Clear the charts object
+
+            // Create and update all charts
+            chartData.forEach((data, index) => {
+                charts[data.id] = createNeonBarChart(data.id, percentages[index], data.color);
+                updateChart(charts[data.id], percentages[index], data.labelId, data.color);
+            });
+        }
+
+        // Initialize charts on page load
+        generateCharts();
+    </script>
+
+</body>
+
+</html>
